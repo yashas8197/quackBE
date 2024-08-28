@@ -14,6 +14,7 @@ const initializeDatabase = async () => {
     }
   } catch (error) {
     console.log("Connection Failed", error);
+    process.exit(1);
   }
 };
 

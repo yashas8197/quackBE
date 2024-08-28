@@ -10,4 +10,13 @@ async function fetchPosts() {
   }
 }
 
-module.exports = { fetchPosts };
+async function fetchPostById(id) {
+  try {
+    const post = await Post.findById(id);
+    return { post };
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = { fetchPosts, fetchPostById };
