@@ -19,4 +19,13 @@ async function fetchPostById(id) {
   }
 }
 
-module.exports = { fetchPosts, fetchPostById };
+async function updatePost(id, dataToUpdate) {
+  try {
+    const post = await Post.findByIdAndUpdate(id, dataToUpdate, { new: true });
+    return { post };
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = { fetchPosts, fetchPostById, updatePost };
