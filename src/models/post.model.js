@@ -40,6 +40,7 @@ const PostSchema = new Schema(
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     avatarURL: { type: String, required: true },
+    isMarked: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

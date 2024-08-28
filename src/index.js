@@ -4,7 +4,9 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 
-const { fetchPosts } = require("./controllers/posts.controller");
+const { fetchPosts, fetchPostById } = require("./controllers/posts.controller");
+const Post = require("./models/post.model");
+const mongoose = require("mongoose");
 
 app.use(express.json());
 
@@ -15,7 +17,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
 initializeDatabase();
 
 app.get("/api/v1/posts", async (req, res) => {
@@ -24,6 +25,20 @@ app.get("/api/v1/posts", async (req, res) => {
 
     if (response.length === 0) {
       return res.status(404).json({ message: "No Posts Found" });
+    }
+
+    res.status(200).json(response);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/api/v1/post/:id", async (req, res) => {
+  try {
+    const response = await fetchPostById(req.params.id);
+
+    if (!response) {
+      return res.status(404).json({ message: "No Post Found" });
     }
 
     res.status(200).json(response);
