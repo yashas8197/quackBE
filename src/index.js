@@ -1,0 +1,38 @@
+const { initializeDatabase } = require("./db/db.connect");
+require("dotenv").config();
+const express = require("express");
+const app = express();
+const cors = require("cors");
+
+const { fetchPosts } = require("./controllers/posts.controller");
+
+app.use(express.json());
+
+const corsOptions = {
+  origin: "*",
+  credentials: true,
+  optionSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+
+initializeDatabase();
+
+app.get("/api/v1/posts", async (req, res) => {
+  try {
+    const response = await fetchPosts();
+
+    if (response.length === 0) {
+      return res.status(404).json({ message: "No Posts Found" });
+    }
+
+    res.status(200).json(response);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`server connected to port http://localhost:${PORT}`);
+});
