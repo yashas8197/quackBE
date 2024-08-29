@@ -10,6 +10,7 @@ const {
   updatePost,
   addCommentToPost,
   likePost,
+  createPost,
 } = require("./controllers/posts.controller");
 
 const Post = require("./models/post.model");
@@ -89,10 +90,24 @@ app.post("/api/v1/comment/:id", async (req, res) => {
     const updatedPost = await addCommentToPost(req.params.id, comment);
 
     if (!updatedPost) {
-      return res.status(404).json({ message: "No Post Found" });
+      return res.status(400).json({ message: "No Post Found" });
     }
 
-    res.status(200).json(updatedPost);
+    res.status(201).json(updatedPost);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+//to add post
+app.post("/api/v1/post", async (req, res) => {
+  try {
+    const response = await createPost(req.body);
+
+    if (!response) {
+      return res.status(400).json({ message: "Somthing went wrong" });
+    }
+    res.status(201).json(response);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

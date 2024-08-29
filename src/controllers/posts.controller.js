@@ -43,6 +43,34 @@ async function addCommentToPost(id, comment) {
   }
 }
 
+async function createPost(post) {
+  try {
+    const { content, mediaUrl, username, firstName, lastName, avatarURL } =
+      post;
+
+    const newPost = new Post({
+      content,
+      mediaUrl,
+      username,
+      firstName,
+      lastName,
+      avatarURL,
+      likes: {
+        likeCount: 0,
+        likedBy: [],
+        dislikedBy: [],
+      },
+      comments: [],
+      isMarked: false,
+    });
+    const savedPost = await newPost.save();
+
+    return savedPost;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function likePost(liked, id) {
   try {
     const post = await Post.findById(id);
@@ -77,4 +105,5 @@ module.exports = {
   updatePost,
   addCommentToPost,
   likePost,
+  createPost,
 };
