@@ -10,7 +10,12 @@ const {
   updatePost,
 } = require("./controllers/posts.controller");
 const Post = require("./models/post.model");
+const User = require("./models/users.model");
 const mongoose = require("mongoose");
+const {
+  fetchUsers,
+  fetchUserByName,
+} = require("./controllers/users.controller");
 
 app.use(express.json());
 
@@ -61,6 +66,34 @@ app.post("/api/v1/post/:id", async (req, res) => {
     res.status(200).json(response);
   } catch (error) {
     return res.status(500).json({ error: error.message });
+  }
+});
+
+// user apis
+
+app.get("/api/v1/users", async (req, res) => {
+  try {
+    const response = await fetchUsers();
+    if (response.length === 0) {
+      return res.status(404).json({ message: "No Users Found" });
+    }
+
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/api/v1/users/:username", async (req, res) => {
+  try {
+    const response = await fetchUserByName(req.params.username);
+    if (!response) {
+      return res.status(404).json({ message: "No Users Found" });
+    }
+
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
