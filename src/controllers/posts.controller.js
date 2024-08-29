@@ -3,7 +3,6 @@ const Post = require("../models/post.model");
 async function fetchPosts() {
   try {
     const posts = await Post.find();
-
     return { posts };
   } catch (error) {
     throw error;
@@ -44,4 +43,38 @@ async function addCommentToPost(id, comment) {
   }
 }
 
-module.exports = { fetchPosts, fetchPostById, updatePost, addCommentToPost };
+async function likePost(liked, id) {
+  try {
+    const post = await Post.findById(id);
+
+    if (!post) {
+      throw new Error("Post not found");
+    }
+
+    const userIndex = post.likes.likedBy.findIndex(
+      (user) => user.username === liked.username
+    );
+
+    if (userIndex !== -1) {
+      post.likes.likeCount -= 1;
+      post.likes.likedBy.splice(userIndex, 1);
+    } else {
+      post.likes.likeCount += 1;
+      post.likes.likedBy.push(liked);
+    }
+
+    const updatedPost = await post.save();
+
+    return updatedPost;
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = {
+  fetchPosts,
+  fetchPostById,
+  updatePost,
+  addCommentToPost,
+  likePost,
+};
