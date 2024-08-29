@@ -12,6 +12,14 @@ const {
   likePost,
 } = require("./controllers/posts.controller");
 
+const Post = require("./models/post.model");
+const User = require("./models/users.model");
+const mongoose = require("mongoose");
+const {
+  fetchUsers,
+  fetchUserByName,
+} = require("./controllers/users.controller");
+
 app.use(express.json());
 
 const corsOptions = {
