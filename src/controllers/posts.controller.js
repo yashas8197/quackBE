@@ -45,8 +45,15 @@ async function addCommentToPost(id, comment) {
 
 async function createPost(post) {
   try {
-    const { type, content, mediaUrl, username, firstName, lastName, avatarURL } =
-      post;
+    const {
+      type,
+      content,
+      mediaUrl,
+      username,
+      firstName,
+      lastName,
+      avatarURL,
+    } = post;
 
     const newPost = new Post({
       content,
@@ -55,7 +62,7 @@ async function createPost(post) {
       firstName,
       lastName,
       avatarURL,
-      type,	
+      type,
       likes: {
         likeCount: 0,
         likedBy: [],
