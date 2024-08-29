@@ -8,6 +8,7 @@ const {
   fetchPosts,
   fetchPostById,
   updatePost,
+  addCommentToPost,
 } = require("./controllers/posts.controller");
 const Post = require("./models/post.model");
 const User = require("./models/users.model");
@@ -64,6 +65,33 @@ app.post("/api/v1/post/:id", async (req, res) => {
     }
 
     res.status(200).json(response);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+// to add comment
+
+app.post("/api/v1/comment/:id", async (req, res) => {
+  try {
+    const comment = req.body;
+    if (
+      !comment.text ||
+      !comment.username ||
+      !comment.firstName ||
+      !comment.lastName ||
+      !comment.avatarURL
+    ) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
+
+    const updatedPost = await addCommentToPost(req.params.id, comment);
+
+    if (!updatedPost) {
+      return res.status(404).json({ message: "No Post Found" });
+    }
+
+    res.status(200).json(updatedPost);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

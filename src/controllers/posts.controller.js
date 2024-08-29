@@ -28,4 +28,20 @@ async function updatePost(id, dataToUpdate) {
   }
 }
 
-module.exports = { fetchPosts, fetchPostById, updatePost };
+async function addCommentToPost(id, comment) {
+  try {
+    const post = await Post.findById(id);
+    if (!post) {
+      throw new Error("Post not found");
+    }
+
+    post.comments.push(comment);
+
+    const updatedPost = await post.save();
+    return updatedPost;
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = { fetchPosts, fetchPostById, updatePost, addCommentToPost };
