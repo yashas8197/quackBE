@@ -19,6 +19,7 @@ const mongoose = require("mongoose");
 const {
   fetchUsers,
   fetchUserByName,
+  updateUser,
 } = require("./controllers/users.controller");
 
 app.use(express.json());
@@ -150,6 +151,22 @@ app.get("/api/v1/users/:username", async (req, res) => {
     res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/api/v1/users/:id", async (req, res) => {
+  try {
+    const response = await updateUser(req.params.id, req.body);
+    if (!response) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "User updated successfully",
+      user: response,
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
 });
 

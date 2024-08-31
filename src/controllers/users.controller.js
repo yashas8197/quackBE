@@ -18,5 +18,17 @@ async function fetchUserByName(username) {
     throw error;
   }
 }
+async function updateUser(id, newFollowRequest) {
+  try {
+    const user = await User.findById(id);
+    user.following.push(newFollowRequest);
 
-module.exports = { fetchUsers, fetchUserByName };
+    const updatedUser = await user.save();
+
+    return updatedUser;
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = { fetchUsers, fetchUserByName, updateUser };
