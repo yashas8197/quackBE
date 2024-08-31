@@ -20,6 +20,8 @@ const {
   fetchUsers,
   fetchUserByName,
   updateUser,
+  updateUserFollowing,
+  updateUserFollowers,
 } = require("./controllers/users.controller");
 
 app.use(express.json());
