@@ -18,7 +18,7 @@ async function fetchUserByName(username) {
     throw error;
   }
 }
-async function updateUser(id, newFollowRequest) {
+async function updateUserFollowing(id, newFollowRequest) {
   try {
     const user = await User.findById(id);
     user.following.push(newFollowRequest);
@@ -31,4 +31,22 @@ async function updateUser(id, newFollowRequest) {
   }
 }
 
-module.exports = { fetchUsers, fetchUserByName, updateUser };
+async function updateUserFollowers(id, newFollowRequest) {
+  try {
+    const user = await User.findById(id);
+    user.followers.push(newFollowRequest);
+
+    const updatedUser = await user.save();
+
+    return updatedUser;
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = {
+  fetchUsers,
+  fetchUserByName,
+  updateUserFollowing,
+  updateUserFollowers,
+};
