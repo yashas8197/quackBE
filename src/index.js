@@ -22,6 +22,7 @@ const {
   updateUser,
   updateUserFollowing,
   updateUserFollowers,
+  unFollowUser,
 } = require("./controllers/users.controller");
 
 app.use(express.json());
@@ -175,6 +176,24 @@ app.post("/api/v1/following/:id", async (req, res) => {
 app.post("/api/v1/followers/:id", async (req, res) => {
   try {
     const response = await updateUserFollowers(req.params.id, req.body);
+    if (!response) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "User updated successfully",
+      user: response,
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/api/v1/unfollow/:userId/:unfollowId", async (req, res) => {
+  const { userId, unfollowId } = req.params;
+
+  try {
+    const response = await unFollowUser(userId, unfollowId);
     if (!response) {
       return res.status(404).json({ message: "User not found" });
     }

@@ -44,9 +44,31 @@ async function updateUserFollowers(id, newFollowRequest) {
   }
 }
 
+async function unFollowUser(userId, unfollowId) {
+  try {
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    user.following = user.following.filter(
+      (follow) => follow._id !== unfollowId
+    );
+
+    const updatedUser = await user.save();
+
+    return updatedUser;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   fetchUsers,
   fetchUserByName,
   updateUserFollowing,
   updateUserFollowers,
+  unFollowUser,
 };
