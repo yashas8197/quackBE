@@ -54,7 +54,7 @@ async function unFollowUser(userId, unfollowId) {
     }
 
     user.following = user.following.filter(
-      (follow) => follow._id !== unfollowId
+      (follow) => !follow._id.equals(unfollowId)
     );
 
     const updatedUser = await user.save();
