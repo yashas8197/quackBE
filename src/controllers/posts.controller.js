@@ -116,9 +116,11 @@ async function editPost(updatePost, id) {
   }
 }
 
-async function editPostAvatar(updatePost, id) {
+async function editPostAvatar(updatePost, username) {
   try {
-    const post = await Post.findByIdAndUpdate(id, updatePost, { new: true });
+    const post = await Post.findOneAndUpdate(username, updatePost, {
+      new: true,
+    });
     return { post };
   } catch (error) {
     throw error;
