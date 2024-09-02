@@ -133,8 +133,20 @@ app.post("/api/v1/like/:id", async (req, res) => {
   }
 });
 
-//to edit post
+//to edit post by id
 app.post("/api/v1/edit/:id", async (req, res) => {
+  try {
+    const updatePost = req.body;
+    const id = req.params.id;
+    const updatedPost = await editPost(updatePost, id);
+
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+//to edit post by username
+app.post("/api/post/edit/:username", async (req, res) => {
   try {
     const updatePost = req.body;
     const id = req.params.id;

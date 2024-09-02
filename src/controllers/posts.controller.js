@@ -116,6 +116,15 @@ async function editPost(updatePost, id) {
   }
 }
 
+async function editPostAvatar(updatePost, id) {
+  try {
+    const post = await Post.findByIdAndUpdate(id, updatePost, { new: true });
+    return { post };
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function deletePost(postToDelete, id) {
   try {
     const post = await Post.findByIdAndDelete(id, postToDelete, { new: true });
@@ -134,4 +143,5 @@ module.exports = {
   createPost,
   editPost,
   deletePost,
+  editPostAvatar,
 };
