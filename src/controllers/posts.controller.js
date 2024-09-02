@@ -107,6 +107,24 @@ async function likePost(liked, id) {
   }
 }
 
+async function editPost(updatePost, id) {
+  try {
+    const post = await Post.findByIdAndUpdate(id, updatePost, { new: true });
+    return { post };
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function deletePost(postToDelete, id) {
+  try {
+    const post = await Post.findByIdAndDelete(id, postToDelete, { new: true });
+    return { post };
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   fetchPosts,
   fetchPostById,
@@ -114,4 +132,6 @@ module.exports = {
   addCommentToPost,
   likePost,
   createPost,
+  editPost,
+  deletePost,
 };

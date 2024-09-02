@@ -11,6 +11,8 @@ const {
   addCommentToPost,
   likePost,
   createPost,
+  editPost,
+  deletePost,
 } = require("./controllers/posts.controller");
 
 const Post = require("./models/post.model");
@@ -125,6 +127,32 @@ app.post("/api/v1/like/:id", async (req, res) => {
     const updatedPost = await likePost(liked, id);
 
     res.status(200).json(updatedPost);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+//to edit post
+app.post("/api/v1/edit/:id", async (req, res) => {
+  try {
+    const updatePost = req.body;
+    const id = req.params.id;
+    const updatedPost = await editPost(updatePost, id);
+
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+//to delete post
+app.delete("/api/user/delete/:id", async (req, res) => {
+  try {
+    const postToDelete = req.body;
+    const id = req.params.id;
+    const deletedPost = await deletePost(postToDelete, id);
+
+    res.status(200).json(deletedPost);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
