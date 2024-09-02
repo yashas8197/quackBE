@@ -36,8 +36,6 @@ async function updateUserFollowers(id, newFollowRequest) {
     const user = await User.findById(id);
     user.followers.push(newFollowRequest);
 
-    const updatedUser = await user.save();
-
     return updatedUser;
   } catch (error) {
     throw error;
@@ -65,10 +63,30 @@ async function unFollowUser(userId, unfollowId) {
   }
 }
 
+async function updateProfile(userId, dataToUpdate) {
+  try {
+    // Find the user by ID
+    const user = await User.findByIdAndUpdate(userId, dataToUpdate, {
+      new: true,
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const updatedUser = await user.save();
+
+    return updatedUser;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   fetchUsers,
   fetchUserByName,
   updateUserFollowing,
   updateUserFollowers,
   unFollowUser,
+  updateProfile,
 };
