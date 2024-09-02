@@ -13,6 +13,7 @@ const {
   createPost,
   editPost,
   deletePost,
+  editPostAvatar,
 } = require("./controllers/posts.controller");
 
 const Post = require("./models/post.model");
@@ -149,8 +150,8 @@ app.post("/api/v1/edit/:id", async (req, res) => {
 app.post("/api/post/edit/:username", async (req, res) => {
   try {
     const updatePost = req.body;
-    const id = req.params.id;
-    const updatedPost = await editPost(updatePost, id);
+    const username = req.params.username;
+    const updatedPost = await editPostAvatar(updatePost, username);
 
     res.status(200).json(updatedPost);
   } catch (error) {
