@@ -9,7 +9,7 @@ const {
   fetchPostById,
   updatePost,
   addCommentToPost,
-  likePost,
+  toggleLike,
   createPost,
   editPost,
   deletePost,
@@ -126,7 +126,7 @@ app.post("/api/v1/like/:id", async (req, res) => {
   try {
     const liked = req.body;
     const id = req.params.id;
-    const updatedPost = await likePost(liked, id);
+    const updatedPost = await toggleLike(liked, id);
 
     res.status(200).json(updatedPost);
   } catch (error) {

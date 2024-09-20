@@ -79,31 +79,34 @@ async function createPost(post) {
   }
 }
 
-async function likePost(liked, id) {
+async function toggleLike(liked, postId) {
   try {
-    const post = await Post.findById(id);
+    const post = await Post.findById(postId); // find the post by ID
 
     if (!post) {
       throw new Error("Post not found");
     }
 
+    // Check if the user already liked the post
     const userIndex = post.likes.likedBy.findIndex(
       (user) => user.username === liked.username
     );
 
     if (userIndex !== -1) {
+      // User already liked the post, so unlike it
       post.likes.likeCount -= 1;
-      post.likes.likedBy.splice(userIndex, 1);
+      post.likes.likedBy.splice(userIndex, 1); // remove user from likedBy array
     } else {
+      // User hasn't liked the post, so like it
       post.likes.likeCount += 1;
-      post.likes.likedBy.push(liked);
+      post.likes.likedBy.push(liked); // add user to likedBy array
     }
 
+    // Save the updated post and return it
     const updatedPost = await post.save();
-
     return updatedPost;
   } catch (error) {
-    throw error;
+    throw new Error("Error toggling like: " + error.message);
   }
 }
 
@@ -145,7 +148,7 @@ module.exports = {
   fetchPostById,
   updatePost,
   addCommentToPost,
-  likePost,
+  toggleLike,
   createPost,
   editPost,
   deletePost,
