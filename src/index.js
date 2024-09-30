@@ -1,5 +1,6 @@
 const { initializeDatabase } = require("./db/db.connect");
 require("dotenv").config();
+const upload = require("../middlewares/multer.middleware");
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -16,9 +17,6 @@ const {
   editPostAvatar,
 } = require("./controllers/posts.controller");
 
-const Post = require("./models/post.model");
-const User = require("./models/users.model");
-const mongoose = require("mongoose");
 const {
   fetchUsers,
   fetchUserByName,
@@ -81,6 +79,32 @@ app.post("/api/v1/post/:id", async (req, res) => {
   }
 });
 
+/* app.post("/api/v1/posts/:firstName", async (req, res) => {
+  console.log(req.params.firstName, req.body);
+  console.log("Updating posts for firstName:", firstName);
+  try {
+    // Update posts where the firstName matches the one in the params
+
+    const response = await updatePostByfirstName(
+      req.params.firstName,
+      req.body
+    );
+
+    if (response.modifiedCount === 0) {
+      return res
+        .status(404)
+        .json({ message: "No Posts Found for this firstName" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Avatar URL updated successfully", response });
+  } catch (error) {
+    console.error("Error updating posts:", error);
+    return res.status(500).json({ error: error.message });
+  }
+}); */
+
 // To add comment
 app.post("/api/v1/comment/:id", async (req, res) => {
   try {
@@ -108,9 +132,10 @@ app.post("/api/v1/comment/:id", async (req, res) => {
 });
 
 //to add post
-app.post("/api/v1/post", async (req, res) => {
+const cpUpload = upload.fields([{ name: "mediaUrl", maxCount: 1 }]);
+app.post("/api/v1/post", cpUpload, async (req, res) => {
   try {
-    const response = await createPost(req.body);
+    const response = await createPost(req.body, req.files);
 
     if (!response) {
       return res.status(400).json({ message: "Somthing went wrong" });

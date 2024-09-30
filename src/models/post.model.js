@@ -34,7 +34,7 @@ const PostSchema = new Schema(
   {
     content: { type: String, required: true },
     type: { type: String },
-    mediaUrl: { type: String, required: true },
+    mediaUrl: { type: String },
     likes: LikeSchema,
     comments: [CommentSchema],
     username: { type: String, required: true },

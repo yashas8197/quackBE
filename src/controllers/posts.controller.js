@@ -1,3 +1,4 @@
+const { uploadOnCloudinary } = require("../../utils/cloudinary");
 const Post = require("../models/post.model");
 
 async function fetchPosts() {
@@ -27,6 +28,29 @@ async function updatePost(id, dataToUpdate) {
   }
 }
 
+/* async function updatePostByfirstName(firstName, dataToUpdate) {
+  try {
+    // Retrieve all posts for the specified firstName
+    const posts = await Post.find({ firstName: firstName });
+    console.log(posts);
+
+    let modifiedCount = 0; // Counter for modified posts
+
+    // Loop through the retrieved posts and update if username matches
+    for (const post of posts) {
+      // Update the avatarURL or any other fields you want to update
+      post.avatarURL = dataToUpdate.avatarURL; // Update the field
+      await post.save(); // Save the updated post
+      modifiedCount++; // Increment the modified count
+    }
+
+    return { modifiedCount }; // Return the count of modified posts
+  } catch (error) {
+    console.error("Error updating posts:", error);
+    throw error;
+  }
+} */
+
 async function addCommentToPost(id, comment) {
   try {
     const post = await Post.findById(id);
@@ -43,17 +67,21 @@ async function addCommentToPost(id, comment) {
   }
 }
 
-async function createPost(post) {
+async function createPost(post, postFile) {
   try {
-    const {
-      type,
-      content,
-      mediaUrl,
-      username,
-      firstName,
-      lastName,
-      avatarURL,
-    } = post;
+    let mediaLocalPath;
+    if (
+      postFile &&
+      Array.isArray(postFile?.mediaUrl) &&
+      postFile?.mediaUrl.length > 0
+    ) {
+      mediaLocalPath = postFile?.mediaUrl[0].path;
+    }
+    console.log(mediaLocalPath);
+
+    const cloudinaryResponse = await uploadOnCloudinary(mediaLocalPath);
+    let mediaUrl = cloudinaryResponse.url;
+    const { type, content, username, firstName, lastName, avatarURL } = post;
 
     const newPost = new Post({
       content,
