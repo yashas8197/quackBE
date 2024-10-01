@@ -77,15 +77,15 @@ async function createPost(post, postFile) {
     ) {
       mediaLocalPath = postFile?.mediaUrl[0].path;
     }
-    console.log(mediaLocalPath);
 
     const cloudinaryResponse = await uploadOnCloudinary(mediaLocalPath);
+
     let mediaUrl = cloudinaryResponse?.secure_url;
     const { type, content, username, firstName, lastName, avatarURL } = post;
 
     const newPost = new Post({
       content,
-      mediaUrl,
+      mediaUrl: cloudinaryResponse?.secure_url,
       username,
       firstName,
       lastName,
