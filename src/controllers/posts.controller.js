@@ -67,7 +67,7 @@ async function addCommentToPost(id, comment) {
   }
 }
 
-async function createPost(post, postFile) {
+/* async function createPost(post, postFile) {
   try {
     let mediaLocalPath;
     if (postFile) {
@@ -100,6 +100,42 @@ async function createPost(post, postFile) {
     });
     const savedPost = await newPost.save();
 
+    return savedPost;
+  } catch (error) {
+    throw error;
+  }
+} */
+
+async function createPost(post, fileBuffer) {
+  try {
+    let mediaUrl = null;
+
+    if (fileBuffer) {
+      // Upload the buffer directly to Cloudinary
+      const cloudinaryResponse = await uploadOnCloudinary(fileBuffer);
+      mediaUrl = cloudinaryResponse?.secure_url;
+    }
+
+    const { type, content, username, firstName, lastName, avatarURL } = post;
+
+    const newPost = new Post({
+      content,
+      mediaUrl, // Save the Cloudinary URL if available
+      username,
+      firstName,
+      lastName,
+      avatarURL,
+      type,
+      likes: {
+        likeCount: 0,
+        likedBy: [],
+        dislikedBy: [],
+      },
+      comments: [],
+      isMarked: false,
+    });
+
+    const savedPost = await newPost.save();
     return savedPost;
   } catch (error) {
     throw error;

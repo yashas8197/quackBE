@@ -134,7 +134,11 @@ app.post("/api/v1/comment/:id", async (req, res) => {
 //to add post
 app.post("/api/v1/post", upload.single("mediaUrl"), async (req, res) => {
   try {
-    const response = await createPost(req.body, req.file);
+    // const response = await createPost(req.body, req.file);
+    const response = await createPost(
+      req.body,
+      req.file ? req.file.buffer : null
+    );
 
     if (!response) {
       return res.status(400).json({ message: "Somthing went wrong" });
