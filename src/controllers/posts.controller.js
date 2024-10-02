@@ -70,22 +70,21 @@ async function addCommentToPost(id, comment) {
 async function createPost(post, postFile) {
   try {
     let mediaLocalPath;
-    if (
-      postFile &&
-      Array.isArray(postFile?.mediaUrl) &&
-      postFile?.mediaUrl.length > 0
-    ) {
-      mediaLocalPath = postFile?.mediaUrl[0].path;
+    if (postFile) {
+      mediaLocalPath = postFile.path;
     }
 
-    const cloudinaryResponse = await uploadOnCloudinary(mediaLocalPath);
+    let mediaUrl = null;
+    if (mediaLocalPath) {
+      const cloudinaryResponse = await uploadOnCloudinary(mediaLocalPath);
+      mediaUrl = cloudinaryResponse?.secure_url;
+    }
 
-    let mediaUrl = cloudinaryResponse?.secure_url;
     const { type, content, username, firstName, lastName, avatarURL } = post;
 
     const newPost = new Post({
       content,
-      mediaUrl: cloudinaryResponse?.secure_url,
+      mediaUrl,
       username,
       firstName,
       lastName,
