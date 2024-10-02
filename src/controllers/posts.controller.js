@@ -118,9 +118,11 @@ async function createPost(post, fileBuffer) {
 
     const { type, content, username, firstName, lastName, avatarURL } = post;
 
+    console.log(avatarURL);
+
     const newPost = new Post({
       content,
-      mediaUrl, // Save the Cloudinary URL if available
+      mediaUrl,
       username,
       firstName,
       lastName,
