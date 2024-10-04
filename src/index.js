@@ -15,6 +15,7 @@ const {
   editPost,
   deletePost,
   editPostAvatar,
+  editAllPostsAvatar,
 } = require("./controllers/posts.controller");
 
 const {
@@ -134,7 +135,6 @@ app.post("/api/v1/comment/:id", async (req, res) => {
 //to add post
 app.post("/api/v1/post", upload.single("mediaUrl"), async (req, res) => {
   try {
-    // const response = await createPost(req.body, req.file);
     const response = await createPost(
       req.body,
       req.file ? req.file.buffer : null
@@ -179,9 +179,11 @@ app.post("/api/post/edit/:username", async (req, res) => {
   try {
     const updatePost = req.body;
     const username = req.params.username;
-    const updatedPost = await editPostAvatar(updatePost, username);
 
-    res.status(200).json(updatedPost);
+    // Call the function to update all posts for the given username
+    const updatedPosts = await editAllPostsAvatar(updatePost, username);
+
+    res.status(200).json(updatedPosts);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

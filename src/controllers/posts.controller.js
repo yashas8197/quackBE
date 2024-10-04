@@ -67,45 +67,6 @@ async function addCommentToPost(id, comment) {
   }
 }
 
-/* async function createPost(post, postFile) {
-  try {
-    let mediaLocalPath;
-    if (postFile) {
-      mediaLocalPath = postFile.path;
-    }
-
-    let mediaUrl = null;
-    if (mediaLocalPath) {
-      const cloudinaryResponse = await uploadOnCloudinary(mediaLocalPath);
-      mediaUrl = cloudinaryResponse?.secure_url;
-    }
-
-    const { type, content, username, firstName, lastName, avatarURL } = post;
-
-    const newPost = new Post({
-      content,
-      mediaUrl,
-      username,
-      firstName,
-      lastName,
-      avatarURL,
-      type,
-      likes: {
-        likeCount: 0,
-        likedBy: [],
-        dislikedBy: [],
-      },
-      comments: [],
-      isMarked: false,
-    });
-    const savedPost = await newPost.save();
-
-    return savedPost;
-  } catch (error) {
-    throw error;
-  }
-} */
-
 async function createPost(post, fileBuffer) {
   try {
     let mediaUrl = null;
@@ -117,8 +78,6 @@ async function createPost(post, fileBuffer) {
     }
 
     const { type, content, username, firstName, lastName, avatarURL } = post;
-
-    console.log(avatarURL);
 
     const newPost = new Post({
       content,
@@ -184,16 +143,16 @@ async function editPost(updatePost, id) {
   }
 }
 
-async function editPostAvatar(updatePost, username) {
+async function editAllPostsAvatar(updatePost, username) {
   try {
-    const post = await Post.findOneAndUpdate(
+    // Use updateMany to update all posts with the same username
+    const result = await Post.updateMany(
       { username: username },
-      updatePost,
-      {
-        new: true,
-      }
+      { $set: updatePost },
+      { new: true }
     );
-    return { post };
+
+    return { updatedCount: result.nModified }; // Return the number of updated posts
   } catch (error) {
     throw error;
   }
@@ -217,5 +176,5 @@ module.exports = {
   createPost,
   editPost,
   deletePost,
-  editPostAvatar,
+  editAllPostsAvatar,
 };
